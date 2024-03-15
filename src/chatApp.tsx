@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPaperPlane,faEdit } from '@fortawesome/free-solid-svg-icons';
-import chatData from './chat.json';
+
 
 interface ChatMessage {
   id: string;
@@ -22,7 +22,9 @@ function ChatApp() {
   const [pageNumber, setPageNumber] = useState(1);
   const [loading, setLoading] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
-
+  const [name, setName] = useState<string>('');
+  const [fromDestination, setFromDestination] = useState<string>('');
+const [toDestination, setToDestination] = useState<string>('');
 
 //FUNCTIONS
 const loadChats = async (page: number) => {
@@ -196,7 +198,7 @@ useEffect(() => {
         <button className="text-black mr-5">
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
-          <h1 className="text-xl mr-auto font-bold">{chatData.name}</h1>
+          <h1 className="text-xl mr-auto font-bold">{name}</h1>
             {/* Edit Button */}
             <button className="text-black ml-auto">
               <FontAwesomeIcon icon={faEdit} />
@@ -204,10 +206,10 @@ useEffect(() => {
         </div>
         <div className='"grid grid-cols-2 gap-2"'>
           <div className=' mt-4'>
-            From: <span className="font-bold">{tripDetails.from}</span>
+            From: <span className="font-bold">{fromDestination}</span>
           </div>
           <div>
-            To:<span className="font-bold"> {tripDetails.to}</span>
+            To:<span className="font-bold"> {toDestination}</span>
           </div>
         </div>
         {/* Placeholder for Right Side Content */}

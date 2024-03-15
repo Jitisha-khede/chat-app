@@ -23,8 +23,8 @@ function ChatApp() {
   const [loading, setLoading] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const [name, setName] = useState<string>('');
-  const [fromDestination, setFromDestination] = useState<string>('');
-const [toDestination, setToDestination] = useState<string>('');
+  const [from, setFrom] = useState<string>('');
+const [to, setTo] = useState<string>('');
 
 //FUNCTIONS
 const loadChats = async (page: number) => {
@@ -59,6 +59,10 @@ useEffect(() => {
 
       // Update messages state with the fetched data
       setMessages(data.chats);
+      setFrom(data.from);
+      setTo(data.to);
+      setLoading(false);
+      setName(data.name);
       setTripDetails({ from: data.from, to: data.to });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -206,10 +210,10 @@ useEffect(() => {
         </div>
         <div className='"grid grid-cols-2 gap-2"'>
           <div className=' mt-4'>
-            From: <span className="font-bold">{fromDestination}</span>
+            From: <span className="font-bold">{from}</span>
           </div>
           <div>
-            To:<span className="font-bold"> {toDestination}</span>
+            To:<span className="font-bold"> {to}</span>
           </div>
         </div>
         {/* Placeholder for Right Side Content */}

@@ -27,34 +27,56 @@ function ChatApp() {
 //FUNCTIONS
 const loadChats = async (page: number) => {
   setLoading(true);
-  const response = await fetch(`your-api-endpoint?page=${page}`); // Update endpoint with pagination params
-  const newChats = await response.json();
-  // Update tripDetails if necessary based on response data
-  if (response.headers.has('X-Updated-Trip-Details')) {
-    const updatedTripDetails = await response.json(); // Parse updated trip details from header
-    setTripDetails(updatedTripDetails);
+  try {
+    const response = await fetch(`https://qa.corider.in/assignment/chat?page=${page}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    const data = await response.json();
+    if (response.headers.has('X-Updated-Trip-Details')) {
+      const updatedTripDetails = await response.json(); // Parse updated trip details from header
+      setTripDetails(updatedTripDetails);
+    }
+    setMessages(prevMessages => [...prevMessages, ...data.chats]);
+    setLoading(false);
+  } catch (err) {
+    console.error('Error fetching data:', err);
+    setLoading(false);
   }
-  setMessages(prevMessages => [...prevMessages, ...newChats]);
-  setLoading(false);
 };
 
-  useEffect(() => {
-    // Extract the array of messages from chatData and set it to messages state
-    if (chatData && chatData.chats && Array.isArray(chatData.chats)) {
-      setMessages(chatData.chats);
-      setTripDetails({ from: chatData.from, to: chatData.to });
-    }
-
-    const handleScroll = () => {
-      if (chatWindowRef.current) {
-        const { scrollTop} = chatWindowRef.current;
-        if (scrollTop === 0 && !loading) {
-          // User has scrolled to the top, load older chats
-          setPageNumber(prevPageNumber => prevPageNumber + 1);
-          loadChats(pageNumber); 
-        }
+// Load initial chats when component mounts
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch("https://qa.corider.in/assignment/chat?page=0");
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
       }
-    };
+      const data = await response.json();
+
+      // Update messages state with the fetched data
+      setMessages(data.chats);
+      setTripDetails({ from: data.from, to: data.to });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  fetchData();
+}, []);
+
+// Load more chats when user scrolls to the top
+useEffect(() => {
+  const handleScroll = () => {
+    if (chatWindowRef.current) {
+      const { scrollTop } = chatWindowRef.current;
+      if (scrollTop === 0 && !loading) {
+        // User has scrolled to the top, load older chats
+        setPageNumber(prevPageNumber => prevPageNumber + 1);
+        loadChats(pageNumber);
+      }
+    }
+  };
   
     // Attach scroll event listener
     chatWindowRef.current?.addEventListener('scroll', handleScroll);

@@ -21,6 +21,9 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src",
+    "src/**/*.tsx",
+    "src/**/*.ts",
+    "node_modules/@fortawesome/fontawesome-svg-core/index.d.ts"
   ]
 }

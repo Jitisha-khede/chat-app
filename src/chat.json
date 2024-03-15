@@ -1,0 +1,119 @@
+{
+  "chats": [
+    {
+      "id": "5646ddd7e71c4395ad4742ff9b76640c",
+      "message": "Cras erat dui, finibus vel lectus ac, pharetra dictum odio.Cras erat dui, finibus vel lectus ac, pharetra dictum odio.Etiam risus sapien, auctor eu volutpat sit amet, porta in nunc.Proin ipsum purus, laoreet quis dictum a, laoreet sed ligula.Nullam tempus scelerisque purus, sed mattis elit condimentum nec.<br>Page 0<br>",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/551/160/160.jpg?hmac=DKAZaW3KPwMLhYwnJ-s_NOYKngMXo-nR1pEQzcNCgr0",
+        "is_kyc_verified": true,
+        "self": false,
+        "user_id": "73785ed67d034f6290b0334c6e756433"
+      },
+      "time": "2024-03-15 18:42:44"
+    },
+    {
+      "id": "df49db6a8c5443dfac469c036dd741d0",
+      "message": "Aenean ullamcorper orci et vulputate fermentum.<br>Page 0<br>Cras erat dui, finibus vel lectus ac, pharetra dictum odio.Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/819/160/160.jpg?hmac=duWXAb-022KT3VnXfDCSyr0sLwddRYoP7RMFnidof_g",
+        "is_kyc_verified": false,
+        "self": false,
+        "user_id": "54fbcca87afa4527b28221df348018b1"
+      },
+      "time": "2024-03-15 18:43:14"
+    },
+    {
+      "id": "4b32e29be09144e390be570207c2b818",
+      "message": "Cras vel elit sed mi placerat pharetra eget vel odio.Duis ac nulla varius diam ultrices rutrum.<br>Page 0<br>Integer ultricies malesuada quam.Aenean ullamcorper orci et vulputate fermentum.",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/1072/160/160.jpg?hmac=IDpbpA5neYzFjtkdFmBDKXwgr-907ewXLa9lLk9JuA8",
+        "is_kyc_verified": true,
+        "self": true,
+        "user_id": "67eab7475e5e4dd0903e133705213b43"
+      },
+      "time": "2024-03-15 18:43:44"
+    },
+    {
+      "id": "38ef3f3da6744caba7253ed177af2685",
+      "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Page 0<br>Quisque vitae varius ex, eu volutpat orci.Cras erat dui, finibus vel lectus ac, pharetra dictum odio.Lorem ipsum dolor sit amet, consectetur adipiscing elit.Nullam tempus scelerisque purus, sed mattis elit condimentum nec.",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/1072/160/160.jpg?hmac=IDpbpA5neYzFjtkdFmBDKXwgr-907ewXLa9lLk9JuA8",
+        "is_kyc_verified": true,
+        "self": true,
+        "user_id": "67eab7475e5e4dd0903e133705213b43"
+      },
+      "time": "2024-03-15 18:44:14"
+    },
+    {
+      "id": "489531ce3ef94e028a05de9538865018",
+      "message": "Nullam tempus scelerisque purus, sed mattis elit condimentum nec.Proin ipsum purus, laoreet quis dictum a, laoreet sed ligula.Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/1072/160/160.jpg?hmac=IDpbpA5neYzFjtkdFmBDKXwgr-907ewXLa9lLk9JuA8",
+        "is_kyc_verified": true,
+        "self": true,
+        "user_id": "67eab7475e5e4dd0903e133705213b43"
+      },
+      "time": "2024-03-15 18:44:44"
+    },
+    {
+      "id": "16f08251fd1442ff99ad928c8ab42a5b",
+      "message": "Duis ac nulla varius diam ultrices rutrum.Nullam tempus scelerisque purus, sed mattis elit condimentum nec.",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/1072/160/160.jpg?hmac=IDpbpA5neYzFjtkdFmBDKXwgr-907ewXLa9lLk9JuA8",
+        "is_kyc_verified": true,
+        "self": true,
+        "user_id": "67eab7475e5e4dd0903e133705213b43"
+      },
+      "time": "2024-03-15 18:45:14"
+    },
+    {
+      "id": "e2aece49851846d18b85407c4f2bc832",
+      "message": "Integer ultricies malesuada quam.Quisque vitae varius ex, eu volutpat orci.Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.Aenean ullamcorper orci et vulputate fermentum.Integer ultricies malesuada quam.",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/648/160/160.jpg?hmac=AqrvRqv79fFWHWjjjm_Cn7QPPJ2JVox_CLRgzISsO4o",
+        "is_kyc_verified": false,
+        "self": false,
+        "user_id": "a6c04ceed74b447280f5fa7ab053adcc"
+      },
+      "time": "2024-03-15 18:45:44"
+    },
+    {
+      "id": "b405f752f1fb4db9aec0a5c681db11d0",
+      "message": "Cras erat dui, finibus vel lectus ac, pharetra dictum odio.Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/551/160/160.jpg?hmac=DKAZaW3KPwMLhYwnJ-s_NOYKngMXo-nR1pEQzcNCgr0",
+        "is_kyc_verified": true,
+        "self": false,
+        "user_id": "73785ed67d034f6290b0334c6e756433"
+      },
+      "time": "2024-03-15 18:46:14"
+    },
+    {
+      "id": "069a4a3922a74adeb48899880b2ecd0f",
+      "message": "Integer ultricies malesuada quam.Integer ultricies malesuada quam.<br>Page 0<br>Cras vel elit sed mi placerat pharetra eget vel odio.",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/1072/160/160.jpg?hmac=IDpbpA5neYzFjtkdFmBDKXwgr-907ewXLa9lLk9JuA8",
+        "is_kyc_verified": true,
+        "self": true,
+        "user_id": "67eab7475e5e4dd0903e133705213b43"
+      },
+      "time": "2024-03-15 18:46:44"
+    },
+    {
+      "id": "b6ac2b8768cc4b8c900d75e53c3ad315",
+      "message": "Aenean ullamcorper orci et vulputate fermentum.<br>Page 0<br>Integer ultricies malesuada quam.",
+      "sender": {
+        "image": "https://fastly.picsum.photos/id/551/160/160.jpg?hmac=DKAZaW3KPwMLhYwnJ-s_NOYKngMXo-nR1pEQzcNCgr0",
+        "is_kyc_verified": true,
+        "self": false,
+        "user_id": "73785ed67d034f6290b0334c6e756433"
+      },
+      "time": "2024-03-15 18:47:14"
+    }
+  ],
+  "from": "Marathahalli",
+  "message": "Chat retrieved successfully",
+  "name": "Trip No. 5",
+  "status": "success",
+  "to": "Bellandur"
+}

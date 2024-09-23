@@ -1,7 +1,6 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faPaperPlane,faEdit } from '@fortawesome/free-solid-svg-icons';
-
+import { faArrowLeft, faPaperPlane, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 interface ChatMessage {
   id: string;
@@ -18,88 +17,56 @@ interface ChatMessage {
 function ChatApp() {
   const [newMessage, setNewMessage] = useState<string>('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [tripDetails, setTripDetails] = useState<{ from: string; to: string }>({from: '',to: '',});
-  const [pageNumber, setPageNumber] = useState(1);
+  const [tripDetails, setTripDetails] = useState<{ from: string; to: string }>({ from: '', to: '' });
+  const [pageNumber, setPageNumber] = useState(0);
   const [loading, setLoading] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const [name, setName] = useState<string>('');
   const [from, setFrom] = useState<string>('');
-const [to, setTo] = useState<string>('');
+  const [to, setTo] = useState<string>('');
 
-//FUNCTIONS
-const loadChats = async (page: number) => {
-  setLoading(true);
-  try {
-    const response = await fetch(`https://qa.corider.in/assignment/chat?page=${page}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch data');
-    }
-    const data = await response.json();
-    if (response.headers.has('X-Updated-Trip-Details')) {
-      const updatedTripDetails = await response.json(); // Parse updated trip details from header
-      setTripDetails(updatedTripDetails);
-    }
-    setMessages(prevMessages => [...prevMessages, ...data.chats]);
-    setLoading(false);
-  } catch (err) {
-    console.error('Error fetching data:', err);
-    setLoading(false);
-  }
-};
-
-// Load initial chats when component mounts
-useEffect(() => {
-  const fetchData = async () => {
+  const loadChats = async (page: number) => {
+    setLoading(true);
     try {
-      const response = await fetch("https://qa.corider.in/assignment/chat?page=0");
+      const response = await fetch(`https://qa.corider.in/assignment/chat?page=${page}`);
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error('Failed to fetch data');
       }
       const data = await response.json();
 
-      // Update messages state with the fetched data
-      setMessages(data.chats);
-      setFrom(data.from);
-      setTo(data.to);
-      setLoading(false);
-      setName(data.name);
-      setTripDetails({ from: data.from, to: data.to });
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  fetchData();
-}, []);
+      // Process fetched messages
+      const fetchedMessages = data.chats.map((msg: ChatMessage) => ({
+        ...msg,
+        time: new Date(msg.time).toISOString(), // Ensure the time is in ISO format
+      }));
 
-// Load more chats when user scrolls to the top
-useEffect(() => {
-  const handleScroll = () => {
-    if (chatWindowRef.current) {
-      const { scrollTop } = chatWindowRef.current;
-      if (scrollTop === 0 && !loading) {
-        // User has scrolled to the top, load older chats
-        setPageNumber(prevPageNumber => prevPageNumber + 1);
-        loadChats(pageNumber);
+      setMessages(prevMessages => [...fetchedMessages, ...prevMessages]);
+
+      // Set trip details only if they are empty
+      if (!from && !to) {
+        setTripDetails({ from: data.from, to: data.to });
+        setFrom(data.from);
+        setTo(data.to);
+        setName(data.name);
       }
+
+      setLoading(false);
+      scrollToBottom(); // Scroll to bottom after loading
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setLoading(false);
     }
   };
-  
-    // Attach scroll event listener
-    chatWindowRef.current?.addEventListener('scroll', handleScroll);
-  
-    return () => {
-      // Detach scroll event listener on cleanup
-      chatWindowRef.current?.removeEventListener('scroll', handleScroll);
-    };
-  }, [loading]);
+
+  useEffect(() => {
+    loadChats(pageNumber); // Load initial chats
+  }, []);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear().toString();
-    return `${day}-${month}-${year}`;
+    return `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
   };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage(e.target.value);
   };
@@ -108,163 +75,110 @@ useEffect(() => {
     if (newMessage.trim() === '') {
       return; // Do not send empty messages
     }
-    const generateMessageId = () => {
-      // Generate a unique ID using a timestamp and a random number
-      return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-    };
-    const getCurrentTime = () => {
-      // Get the current date and time
-      const now = new Date();
-      // Format the date and time as a string
-      return now.toISOString();
-    };
-    // Create a new message object
-    const newChatMessage = {
-      id: generateMessageId(), // You can use any method to generate a unique message ID
+    const newChatMessage: ChatMessage = {
+      id: Date.now().toString(),
       message: newMessage,
       sender: {
-       
-        image: '', 
-      is_kyc_verified: false, 
-      self: true, 
-      user_id: '', 
+        image: '',
+        is_kyc_verified: false,
+        self: true,
+        user_id: '',
       },
-      time:getCurrentTime(), // You can use any method to get the current time
-  };
-  
-    // Update the chat messages state with the new message
+      time: new Date().toISOString(),
+    };
+
     setMessages(prevMessages => [...prevMessages, newChatMessage]);
-  
-    // Clear the input field after sending the message
-    setNewMessage('');
+    setNewMessage(''); // Clear input field
+    scrollToBottom(); // Scroll to bottom after sending a message
   };
 
-  // Function to group messages by date
   const groupMessagesByDate = (messages: ChatMessage[]) => {
     const groupedMessages: { [date: string]: ChatMessage[] } = {};
     messages.forEach(message => {
-      const date = message.time.split(' ')[0]; // Extract date from message time
+      const date = message.time.split('T')[0]; // Extract date from message time
       if (!groupedMessages[date]) {
         groupedMessages[date] = [];
       }
-      groupedMessages[date].unshift(message);
+      groupedMessages[date].push(message); // Maintain order of messages
     });
     return groupedMessages;
   };
 
   const groupedMessages = groupMessagesByDate(messages);
 
-  const renderSenderLogo = (senderImage: string) => {
-    return <img src={senderImage} alt="Sender Logo" className="w-6 h-6 rounded-full mr-2" />;
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault(); // Prevent submission
-      sendMessage();
+  const handleScroll = () => {
+    if (chatWindowRef.current) {
+      const { scrollTop } = chatWindowRef.current;
+      if (scrollTop === 0 && !loading) {
+        setPageNumber(prevPageNumber => prevPageNumber + 1);
+        loadChats(pageNumber + 1);
+      }
     }
   };
-  const [inputHeight, setInputHeight] = useState<number>(0);
-
-  useEffect(() =>{
-    setInputHeight(document.getElementById('input-bar')?.clientHeight || 0);
-  },[]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (chatWindowRef.current) {
-        const { scrollTop} = chatWindowRef.current;
-        if (scrollTop === 0 && !loading) {
-          // User has scrolled to the top, load older chats
-          setPageNumber(prevPageNumber => prevPageNumber + 1);
-        }
-      }
-    };
-  
-    // Attach scroll event listener
     chatWindowRef.current?.addEventListener('scroll', handleScroll);
-  
     return () => {
-      // Detach scroll event listener on cleanup
       chatWindowRef.current?.removeEventListener('scroll', handleScroll);
     };
-  }, [loading]); // Add loading dependency to prevent multiple API calls while loading
-  
-  
-///UI
-/////////////////////////////////////////////////////////////////////////////
+  }, [loading]);
+
+  const scrollToBottom = () => {
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen bg-slate-50">
-      <div className="bg-white text-black py-4 px-6 items-center space-x-4"> 
-        {/* Chat Title */}
+      <div className="bg-white text-black py-4 px-6 items-center space-x-4">
         <div className="flex items-center flex-grow">
-        {/* Back Button */}
-        <button className="text-black mr-5">
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </button>
+          <button className="text-black mr-5">
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
           <h1 className="text-xl mr-auto font-bold">{name}</h1>
-            {/* Edit Button */}
-            <button className="text-black ml-auto">
-              <FontAwesomeIcon icon={faEdit} />
-            </button>
+          <button className="text-black ml-auto">
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
         </div>
-        <div className='"grid grid-cols-2 gap-2"'>
-          <div className=' mt-4'>
+        <div className="mt-4">
+          <div>
             From: <span className="font-bold">{from}</span>
           </div>
           <div>
-            To:<span className="font-bold"> {to}</span>
+            To: <span className="font-bold">{to}</span>
           </div>
         </div>
-        {/* Placeholder for Right Side Content */}
-        <div></div>
       </div>
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-4" style={{ paddingBottom: '70px' }}>
-        {/* Render chat messages here */}
-        <div className="flex flex-col h-screen">
-          {/* Chat Messages */}
-          <div>
-          <div ref={chatWindowRef} className="flex-1 overflow-y-auto px-6 py-4" style={{ maxHeight: `calc(100vh - ${inputHeight}px)` }}>
-          
-            {/* Render grouped messages */}
-            {Object.entries(groupedMessages).map(([date, messages]) => (
-              <div key={date}>
-              {/* Render date */}
-                <div className="text-center text-gray-600 mb-2">{formatDate(date)}</div>
-                {/* Render messages */}
-                {messages.map((message, index) => (
-                  <div key={message.id} className={`flex ${message.sender.self ? 'justify-end' : 'justify-start'} mb-3`}>
-                    {/* Render sender's logo */}
-                    {!message.sender.self && renderSenderLogo(message.sender.image)}
-                    <div className={`message-container p-2 rounded-lg ${message.sender.self ? 'bg-blue-500 text-white self-message' : 'bg-gray-200 text-gray-800 other-message'}
-                       ${index < messages.length - 1 ? 'mb-4' : ''}`} style={{ maxWidth: '80%' }}>
-                      {message.message}
-                    </div>
-                  </div>
-                ))}
+
+      <div ref={chatWindowRef} className="flex-1 overflow-y-auto px-6 py-4" style={{ paddingBottom: '70px' }}>
+        {Object.entries(groupedMessages).map(([date, messages]) => (
+          <div key={date}>
+            <div className="text-center text-gray-600 mb-2">{formatDate(date)}</div>
+            {messages.map((message) => (
+              <div key={message.id} className={`flex ${message.sender.self ? 'justify-end' : 'justify-start'} mb-3`}>
+                {!message.sender.self && <img src={message.sender.image} alt="Sender Logo" className="w-6 h-6 rounded-full mr-2" />}
+                <div className={`message-container p-2 rounded-lg ${message.sender.self ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`} style={{ maxWidth: '80%' }}>
+                  {message.message}
+                </div>
               </div>
             ))}
           </div>
-          </div>
+        ))}
+      </div>
 
-          {/* Message Input Bar */}
-          <div className="bg-gray-200 flex items-center px-4 py-2 fixed bottom-0 left-0 w-full">
-            {/* Message Input */}
-            <input
-              type="text"
-              value={newMessage}
-              onChange={handleInputChange}
-              onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
-              className="flex-1 rounded-lg px-4 py-2 mr-2 focus:outline-none focus:ring focus:border-blue-300"
-            />
-            {/* Send Button */}
-            <button onClick={sendMessage} className="bg-black hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg">
-              <FontAwesomeIcon icon={faPaperPlane} />
-            </button>
-          </div>
-        </div>
+      <div className="bg-gray-200 flex items-center px-4 py-2 fixed bottom-0 left-0 w-full">
+        <input
+          type="text"
+          value={newMessage}
+          onChange={handleInputChange}
+          onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), sendMessage())}
+          placeholder="Type a message..."
+          className="flex-1 rounded-lg px-4 py-2 mr-2 focus:outline-none focus:ring focus:border-blue-300"
+        />
+        <button onClick={sendMessage} className="bg-black hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg">
+          <FontAwesomeIcon icon={faPaperPlane} />
+        </button>
       </div>
     </div>
   );
